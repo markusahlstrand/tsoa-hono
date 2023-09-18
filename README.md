@@ -1,28 +1,59 @@
-# tsoa-workers
+# tsoa-hono
 
-This is a lib is to make it possible to run the fantastic [TSOA](https://tsoa-community.github.io/)-library in Cloudflare workers.
+`tsoa-hono` is an npm library that integrates `tsoa` with the `hono` router. With this library, you can run `tsoa` seamlessly in a variety of environments, such as Node.js, Cloudflare Workers, Deno, and AWS Edge Lambdas.
 
-To avoid any node dependencies ensure that you import `@tsoa/runtime` in your routes rather than `tsoa`
+## Features
 
-After a bit of misunderstanding the only thing needed to add is to a new handlebars-template.
+- Provides a template file for easy setup and integration of `tsoa` with the `hono` router.
+- Supports a wide range of environments, ensuring versatility and adaptability.
 
-## Examples
+## Installation
 
-Check out the examples folder for how to set up a project using tsoa-workers. The only change needed compared to vanilla tsoa is just a single line in the `tsoa.json`-file to switch the middleware template:
+Install via npm:
 
+```bash
+npm install tsoa-hono
 ```
+
+## Setup
+
+1. Ensure you have a `tsoa` configuration file (`tsoa.json`) in your project root. If not, create one.
+2. Add or modify the configuration as follows:
+
+```json
 {
   "entryFile": "src/app.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/**/*Controller.ts"],
   "spec": {
     "outputDirectory": "build",
-    "specVersion": 3,
+    "specVersion": 3
   },
   "routes": {
     "routesDir": "build",
-    "middlewareTemplate": "node_modules/tsoa-workers/cloudworker-router.hbs"
-
+    "middlewareTemplate": "node_modules/tsoa-hono/hono-router.hbs"
   }
 }
 ```
+
+- `entryFile`: The main entry file for your application.
+- `noImplicitAdditionalProperties`: Control how additional properties in the request body are treated.
+- `controllerPathGlobs`: A pattern to find your controllers.
+- `spec`: Specifications related to your API.
+- `routes`: Configuration for your route generation.
+
+## Usage
+
+Once the `tsoa.json` configuration is set up, run your `tsoa` command as you normally would. The integration with the `hono` router will be handled by the library using the provided template.
+
+## Support
+
+If you encounter any issues or have questions related to the library, please refer to our [GitHub repository]().
+
+## License
+
+MIT
+
+---
+
+We hope `tsoa-hono` helps streamline your development process!
