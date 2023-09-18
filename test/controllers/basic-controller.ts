@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Route,
+  Security,
 } from '@tsoa/runtime';
 
 interface FooBody {
@@ -66,5 +67,11 @@ export class BasicController extends Controller {
   @Post('www-form-body')
   public async basicPostWithWwwFormBody(@Body() foo: FooBody) {
     return foo;
+  }
+
+  @Get('auth')
+  @Security('api', [''])
+  public async basicGetWithAuth() {
+    return 'OK';
   }
 }

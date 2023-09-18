@@ -175,4 +175,28 @@ describe('routes', () => {
       expect(response.status).toBe(200);
     });
   });
+
+  describe('auth', () => {
+    it('should return a 403 for a unauthorized request', async () => {
+      const response = await worker.fetch('/basic/auth');
+
+      expect(response.status).toBe(403);
+
+      const body = await response.text();
+      expect(body).toBe('Unauthorized');
+    });
+
+    it('should return a 200 for a authorized request', async () => {
+      const response = await worker.fetch('/basic/auth', {
+        headers: {
+          test: 'test',
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      const body = await response.text();
+      expect(body).toBe('OK');
+    });
+  });
 });

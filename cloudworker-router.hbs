@@ -19,12 +19,6 @@ import { {{name}} } from '{{modulePath}}';
 {{/each}}
 {{#if authenticationModule}}
 import { authenticationHandler } from '{{authenticationModule}}';
-// @ts-ignore - no great way to install types from subpackage
-{{#if esm}}
-import promiseAny from 'promise.any';
-{{else}}
-const promiseAny = require('promise.any');
-{{/if}}
 {{/if}}
 {{#if iocModule}}
 import { iocContainer } from '{{iocModule}}';
@@ -74,6 +68,9 @@ export function RegisterRoutes(router: Hono) {
     // ###########################################################################################################
     {{#each controllers}}
     {{#each actions}}
+        {{#if security.length}}
+        router.{{method}}('{{fullPath}}', authenticationHandler({{json security}}));
+        {{/if}}
         router.{{method}}('{{fullPath}}', async (ctx: Context, next: any) => {
             const args = {
                 {{#each parameters}}
