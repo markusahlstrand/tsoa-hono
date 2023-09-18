@@ -25,6 +25,6 @@
   "routes": {
     "routesDir": "test/build",
     "authenticationModule": "./test/authentication.ts",
-    "middlewareTemplate": "cloudworker-router.hbs"
+    "middlewareTemplate": "hono-router.hbs"
   }
 }

@@ -39,6 +39,13 @@ export class BasicController extends Controller {
     return foo || 'No foo';
   }
 
+  @Get('redirect')
+  public async basicRedirect() {
+    this.setStatus(302);
+    this.setHeader('location', 'https://www.google.com');
+    return 'Redirect to google';
+  }
+
   @Post('')
   public async basicPost(@Body() body: string) {
     return body;

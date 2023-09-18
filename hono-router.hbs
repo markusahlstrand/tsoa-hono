@@ -112,11 +112,11 @@ function returnHandler(
   data?: string | object,
 ) {
   if (typeof data === 'string') {
-    return ctx.text(data);
+    return ctx.text(data, controller.getStatus(), controller.getHeaders());
   }
 
   if (typeof data === 'object') {
-    return ctx.json(data);
+    return ctx.json(data, controller.getStatus(), controller.getHeaders());
   }
 
   throw new Error(`Unsupported return type ${typeof data === 'object'}`);

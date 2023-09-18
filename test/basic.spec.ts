@@ -199,4 +199,17 @@ describe('routes', () => {
       expect(body).toBe('OK');
     });
   });
+
+  describe('rediret', () => {
+    it('should return a redirect', async () => {
+      const response = await worker.fetch('/basic/redirect', {
+        redirect: 'manual',
+      });
+
+      expect(response.status).toBe(302);
+
+      const body = await response.text();
+      expect(body).toBe('Redirect to google');
+    });
+  });
 });
