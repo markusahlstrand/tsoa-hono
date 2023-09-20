@@ -4,7 +4,11 @@ describe('routes', () => {
   let worker;
 
   beforeEach(async () => {
-    worker = await wrangler.unstable_dev('test/app.ts', {});
+    worker = await wrangler.unstable_dev('test/app.ts', {
+      experimental: {
+        disableExperimentalWarning: true,
+      },
+    });
   });
 
   afterEach(() => {
