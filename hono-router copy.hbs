@@ -114,6 +114,19 @@ async function runHandlers(ctx: Context, handlers) {
 }
 
 function identifyObject(obj) {
+  let isNodeBufferAvailable = false;
+  let isNodeStreamAvailable = false;
+  let ReadableStream;
+
+  // Check for the availability of Node.js modules
+  try {
+    isNodeBufferAvailable = typeof require('buffer').Buffer !== 'undefined';
+    ReadableStream = require('stream').Readable;
+    isNodeStreamAvailable = typeof ReadableStream !== 'undefined';
+  } catch (e) {
+    // We are likely not in a Node.js environment
+  }
+
   if (obj === null) {
     return 'null';
   } else if (obj === undefined) {
@@ -122,8 +135,14 @@ function identifyObject(obj) {
     return 'String';
   } else if (typeof obj === 'number') {
     return 'Number';
+  } else if (isNodeBufferAvailable && obj instanceof Buffer) {
+    return 'Buffer';
   } else if (obj instanceof ArrayBuffer) {
     return 'ArrayBuffer';
+  } else if (ArrayBuffer.isView(obj)) {
+    return 'TypedArray';
+  } else if (isNodeStreamAvailable && obj instanceof ReadableStream) {
+    return 'Readable Stream';
   } else if (typeof obj === 'object') {
     return 'Object';
   } else {
@@ -143,8 +162,10 @@ function returnHandler(
         data.toString() as string,
         controller.getStatus(),
         controller.getHeaders(),
-      );    
-    case 'ArrayBuffer':    
+      );
+    case 'Buffer':
+    case 'ArrayBuffer':
+    case 'TypedArray':
       // Hono doesn't seem to have a way to handle buffers
       const headers: HeadersInit = Object.entries(
         controller.getHeaders(),

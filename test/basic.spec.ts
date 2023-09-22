@@ -152,10 +152,10 @@ describe('routes', () => {
         },
       });
 
+      expect(response.status).toBe(200);
+
       const body = await response.json();
       expect(body).toEqual(fooBody);
-
-      expect(response.status).toBe(200);
     });
 
     it('should pass x-www-form-urlencoded as body', async () => {
