@@ -124,6 +124,8 @@ function identifyObject(obj) {
     return 'Number';
   } else if (obj instanceof ArrayBuffer) {
     return 'ArrayBuffer';
+  } else if (obj instanceof ArrayBuffer) {
+    return 'Buffer';
   } else if (typeof obj === 'object') {
     return 'Object';
   } else {
@@ -142,24 +144,17 @@ function returnHandler(
       return ctx.text(
         data.toString() as string,
         controller.getStatus(),
-        controller.getHeaders(),
+        controller.getHeaders() as Record<string, string>,
       );    
     case 'ArrayBuffer':    
-      // Hono doesn't seem to have a way to handle buffers
-      const headers: HeadersInit = Object.entries(
-        controller.getHeaders(),
-      ).flatMap(([key, value]): [string, string][] =>
-        Array.isArray(value)
-          ? value.map((v) => [key, v] as [string, string])
-          : [[key, value] as [string, string]],
-      );
-
+    case 'Buffer':    
+      // Doesn't seem to be a built in way to handle buffers in hono
       return new Response(data as Buffer, {
         status: controller.getStatus(),
-        headers,
+        headers: controller.getHeaders() as Record<string, string>,
       });
     case 'Object':
-      return ctx.json(data, controller.getStatus(), controller.getHeaders());
+      return ctx.json(data, controller.getStatus(), controller.getHeaders() as Record<string, string>);
   }
 }
 
