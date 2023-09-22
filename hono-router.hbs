@@ -124,7 +124,7 @@ function identifyObject(obj) {
     return 'Number';
   } else if (obj instanceof ArrayBuffer) {
     return 'ArrayBuffer';
-  } else if (obj instanceof ArrayBuffer) {
+  } else if (obj instanceof Buffer) {
     return 'Buffer';
   } else if (typeof obj === 'object') {
     return 'Object';
