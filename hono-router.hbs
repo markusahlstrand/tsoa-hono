@@ -78,7 +78,14 @@ export function RegisterRoutes<T = any>(router: Hono<T>) {
             try {
               validatedArgs = await getValidatedArgs(args, ctx);
             } catch (err: any) {
+              if (err instanceof ValidateError) {
                 return ctx.json({ fields: err.fields }, err.status || 400);
+              }
+
+              return ctx.json({
+                message: err.message,
+                cause: err.cause,
+              });
             }
 
             {{#if ../../iocModule}}
