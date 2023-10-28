@@ -5,6 +5,7 @@ describe('routes', () => {
 
   beforeEach(async () => {
     worker = await wrangler.unstable_dev('test/app.ts', {
+      nodeCompat: true,
       experimental: {
         disableExperimentalWarning: true,
       },
@@ -136,6 +137,16 @@ describe('routes', () => {
       expect(body).toBe('No foo');
       expect(response.status).toBe(200);
     });
+
+    it('should set a header in the response', async () => {
+      const response = await worker.fetch('/basic/header', {
+        headers: {
+          foo: 'bar',
+        },
+      });
+
+      expect(response.headers.get('foo')).toBe('bar');
+    });
   });
 
   describe('body', () => {
@@ -173,10 +184,10 @@ describe('routes', () => {
         },
       });
 
+      expect(response.status).toBe(200);
+
       const body = await response.json();
       expect(body).toEqual(fooBody);
-
-      expect(response.status).toBe(200);
     });
   });
 

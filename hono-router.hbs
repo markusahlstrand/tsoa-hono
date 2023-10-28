@@ -150,7 +150,8 @@ function returnHandler(
     case 'String':
       return ctx.text(
         data.toString() as string,
-        controller.getStatus(),
+        // The default status in required for hono to set the headers
+        controller.getStatus() || 200,
         controller.getHeaders() as Record<string, string>,
       );    
     case 'ArrayBuffer':    
@@ -161,8 +162,12 @@ function returnHandler(
         headers: controller.getHeaders() as Record<string, string>,
       });
     case 'Object':
-      return ctx.json(data, controller.getStatus(), controller.getHeaders() as Record<string, string>);
-  }
+      // The default status in required for hono to set the headers
+      return ctx.json(
+        data,
+        controller.getStatus() || 200,
+        controller.getHeaders() as Record<string, string>,
+      );  }
 }
 
 async function getBody(ctx: Context) {

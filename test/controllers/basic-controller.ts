@@ -36,6 +36,10 @@ export class BasicController extends Controller {
 
   @Get('header')
   public async basicGetWithHeader(@Header('foo') foo?: string) {
+    if (foo) {
+      this.setHeader('foo', foo);
+    }
+
     return foo || 'No foo';
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "tsoa-hono",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A library for integrating the hono router with tsoa",
   "main": "",
   "files": [
