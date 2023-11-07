@@ -149,7 +149,7 @@ function returnHandler(
     case 'Number':
     case 'String':
       return ctx.text(
-        data.toString() as string,
+        data?.toString() as string,
         // The default status in required for hono to set the headers
         controller.getStatus() || 200,
         controller.getHeaders() as Record<string, string>,
