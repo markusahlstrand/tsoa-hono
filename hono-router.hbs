@@ -73,7 +73,7 @@ export function RegisterRoutes<T = any>(router: Hono<any>) {
                 {{/each}}
             };
 
-            let validatedArgs;
+            let validatedArgs: any;
             
             try {
               validatedArgs = await getValidatedArgs(args, ctx);
