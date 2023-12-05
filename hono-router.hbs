@@ -114,13 +114,13 @@ export function RegisterRoutes<T = any>(router: Hono<any>) {
 }
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
-async function runHandlers(ctx: Context, handlers) {
+async function runHandlers(ctx: Context, handlers: any) {
   const [handler, ...next] = handlers;
 
   return handler(ctx, next.length ? () => runHandlers(ctx, next) : undefined);
 }
 
-function identifyObject(obj) {
+function identifyObject(obj: any) {
   if (obj === null) {
     return 'null';
   } else if (obj === undefined) {
@@ -187,7 +187,7 @@ async function getBody(ctx: Context) {
 
 async function getValidatedArgs(
     args: any,
-    ctx,    
+    ctx: any,    
   ) {
     const errorFields: FieldErrors = {};
     const values = await Promise.all(Object.keys(args).map(async (key) => {
