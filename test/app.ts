@@ -9,10 +9,10 @@ export type Var = {
   test: 'test';
 };
 
-const app = new Hono<{ Bindings: Env; Var: Var }>();
+export const app = new Hono<{ Bindings: Env; Var: Var }>().get(
+  '/hono',
+  async (ctx) => ctx.text('Hono router'),
+);
 
-app.get('/hono', async (ctx) => ctx.text('Hono router'));
-
-RegisterRoutes<{ Bindings: Env; Var: Var }>(app);
-
-export default app;
+const tsoaApp = RegisterRoutes<typeof app>(app);
+export default tsoaApp;

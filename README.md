@@ -7,6 +7,17 @@
 - Provides a template file for easy setup and integration of `tsoa` with the `hono` router.
 - Supports a wide range of environments, ensuring versatility and adaptability.
 
+The `tsoa-hono` uses the fluent API from `hono` that returns a typed router. This allows you to use the output of the RegisterRoutes function with the `hono/testing` library:
+
+```typescript
+const app = new Hono();
+const tsoaApp = RegisterRoutes<typeof app>(app);
+
+const response = await testClient(tsoaApp).basic.$get();
+
+const body = await response.text();
+```
+
 ## Installation
 
 Install via npm:
