@@ -124,6 +124,8 @@ function identifyObject(obj: any) {
     return 'undefined';
   } else if (typeof obj === 'string') {
     return 'String';
+  } else if (typeof obj === 'boolean') {
+    return "Boolean";
   } else if (typeof obj === 'number') {
     return 'Number';
   } else if (obj instanceof ArrayBuffer) {
@@ -144,6 +146,7 @@ function returnHandler(
 ) {
   switch (identifyObject(data)) {
     case 'Number':
+    case 'Boolean':
     case 'String':
       if (!data) return;
       return ctx.text(
