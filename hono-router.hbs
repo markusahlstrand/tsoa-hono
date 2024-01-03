@@ -147,7 +147,7 @@ function identifyObject(obj: any) {
 function returnHandler(
   ctx: Context,
   controller: Controller,
-  data?: string | object,
+  data?: string | object | number | boolean,
 ) {
   switch (identifyObject(data)) {
     case 'Number':
