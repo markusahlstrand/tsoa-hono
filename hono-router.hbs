@@ -64,6 +64,7 @@ export function RegisterRoutes<T extends Hono>(router: T) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
+                 
     return router{{#each controllers}}{{#each actions}}
         .{{method}}('{{fullPath}}', async (ctx: Context, next: any) => {
             const args = {
@@ -102,11 +103,15 @@ export function RegisterRoutes<T extends Hono>(router: T) {
               {{#if security.length}}
                 authenticationHandler({{json security}}),
               {{/if}}
-              () => controller.{{name}}.apply(controller, validatedArgs)
-            ]
-            const result = await runHandlers(ctx, handlers);
+              ...(fetchMiddlewares<Context>({{../name}})),
+              ...(fetchMiddlewares<Context>({{../name}}.prototype.{{name}})),
+              async () => {
+                const result = await controller.{{name}}.apply(controller, validatedArgs)
+                return returnHandler(ctx, controller, result);
+              },
+            ];
 
-            return returnHandler(ctx, controller, result);
+            return runHandlers(ctx, handlers);
         }){{/each}}{{/each}}
 }
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -124,6 +129,8 @@ function identifyObject(obj: any) {
     return 'undefined';
   } else if (typeof obj === 'string') {
     return 'String';
+  } else if (typeof obj === 'boolean') {
+    return "Boolean";
   } else if (typeof obj === 'number') {
     return 'Number';
   } else if (obj instanceof ArrayBuffer) {
@@ -144,6 +151,7 @@ function returnHandler(
 ) {
   switch (identifyObject(data)) {
     case 'Number':
+    case 'Boolean':
     case 'String':
       if (!data) return;
       return ctx.text(

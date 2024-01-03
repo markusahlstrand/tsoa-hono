@@ -226,7 +226,7 @@ describe('honoTesting', () => {
     });
   });
 
-  describe('rediret', () => {
+  describe('redirect', () => {
     it('should return a redirect', async () => {
       const response = await testClient(tsoaApp).basic.redirect.$get();
 
@@ -234,6 +234,19 @@ describe('honoTesting', () => {
 
       const body = await response.text();
       expect(body).toBe('Redirect to google');
+    });
+  });
+
+  describe('middleware', () => {
+    it('should add a header on the response', async () => {
+      const response = await testClient(tsoaApp).basic.middleware.$get();
+
+      expect(response.status).toBe(200);
+
+      expect(response.headers.get('customMiddleware')).toBe('true');
+
+      const body = await response.text();
+      expect(body).toBe('OK');
     });
   });
 });
