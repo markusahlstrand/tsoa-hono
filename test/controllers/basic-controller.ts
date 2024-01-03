@@ -11,10 +11,20 @@ import {
   Query,
   Route,
   Security,
+  Middlewares,
 } from '@tsoa/runtime';
+import { Context } from 'hono';
+import { Next } from '../../Next';
 
 interface FooBody {
   foo: string;
+}
+
+async function customMiddleware(ctx: Context, next: Next) {
+  const response = await next();
+
+  response.headers.set('customMiddleware', 'true');
+  return response;
 }
 
 @Route('basic')
@@ -83,6 +93,12 @@ export class BasicController extends Controller {
   @Get('auth')
   @Security('api', [''])
   public async basicGetWithAuth() {
+    return 'OK';
+  }
+
+  @Get('middleware')
+  @Middlewares(customMiddleware)
+  public async basicGetWithMiddleware() {
     return 'OK';
   }
 }

@@ -57,6 +57,19 @@ npm install tsoa-hono
 
 Once the `tsoa.json` configuration is set up, run your `tsoa` command as you normally would. The integration with the `hono` router will be handled by the library using the provided template.
 
+### Middlewares
+
+The middlewares are based on hono and return a Response object. As the hono Next function doesn't return anything according to the Typescript definition, the tsoa-hono library uses a different Typescript type for the Next function that is part of the package.
+
+```typescript
+async function customMiddleware(ctx: Context, next: Next) {
+  const response = await next();
+
+  response.headers.set('customMiddleware', 'true');
+  return response;
+}
+```
+
 ## Support
 
 If you encounter any issues or have questions related to the library, please refer to our [GitHub repository]().
