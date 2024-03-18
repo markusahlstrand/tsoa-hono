@@ -151,6 +151,9 @@ function returnHandler(
   controller: Controller,
   data?: string | object | number | boolean,
 ) {
+  // hono v4 requires specific status code instead of all numbers
+  // The default status in required for hono to set the headers
+  const status: any = controller.getStatus() || 200;
   switch (identifyObject(data)) {
     case 'Number':
     case 'Boolean':
@@ -158,8 +161,7 @@ function returnHandler(
       if (!data) return;
       return ctx.text(
         data.toString() as string,
-        // The default status in required for hono to set the headers
-        controller.getStatus() || 200,
+        status,
         controller.getHeaders() as Record<string, string>,
       );    
     case 'ArrayBuffer':    
@@ -170,9 +172,9 @@ function returnHandler(
         headers: controller.getHeaders() as Record<string, string>,
       });
     case 'Object':
-      // The default status in required for hono to set the headers
+      const anyObject: any = data;
       return ctx.json(
-        data,
+        anyObject,
         controller.getStatus() || 200,
         controller.getHeaders() as Record<string, string>,
       );  }
