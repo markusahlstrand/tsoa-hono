@@ -14,5 +14,6 @@ export const app = new Hono<{ Bindings: Env; Var: Var }>().get(
   async (ctx) => ctx.text('Hono router'),
 );
 
+// @ts-ignore
 const tsoaApp = RegisterRoutes<typeof app>(app);
 export default tsoaApp;

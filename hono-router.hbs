@@ -23,6 +23,7 @@ import { iocContainer } from '{{iocModule}}';
 import { IocContainer, IocContainerFactory } from '@tsoa/runtime';
 {{/if}}
 import { Hono, Context } from 'hono';
+import { StatusCode } from 'hono/utils/http-status';
 {{#if useFileUploads}}
 // TODO: test file upload
 // const multer = require('@koa/multer');
@@ -79,7 +80,7 @@ export function RegisterRoutes<T extends Hono>(router: T) {
               validatedArgs = await getValidatedArgs(args, ctx);
             } catch (err: any) {
               if (err instanceof ValidateError) {
-                return ctx.json({ fields: err.fields }, err.status || 400);
+                return ctx.json({ fields: err.fields }, (err.status || 400) as StatusCode);
               }
 
               return ctx.json({
@@ -157,21 +158,21 @@ function returnHandler(
       return ctx.text(
         data.toString() as string,
         // The default status in required for hono to set the headers
-        controller.getStatus() || 200,
+        (controller.getStatus() || 200) as StatusCode,
         controller.getHeaders() as Record<string, string>,
       );    
     case 'ArrayBuffer':    
     case 'Buffer':    
       // Doesn't seem to be a built in way to handle buffers in hono
       return new Response(data as Buffer, {
-        status: controller.getStatus(),
+        status: (controller.getStatus() || 200) as StatusCode,
         headers: controller.getHeaders() as Record<string, string>,
       });
     case 'Object':
       // The default status in required for hono to set the headers
       return ctx.json(
-        data,
-        controller.getStatus() || 200,
+        data as Object,
+        (controller.getStatus() || 200) as StatusCode,
         controller.getHeaders() as Record<string, string>,
       );  }
 }
@@ -224,7 +225,7 @@ async function getValidatedArgs(
         case 'header':
           return validationService.ValidateParam(
             args[key],
-            ctx.req.headers.get(name) ?? undefined,
+            ctx.req.header(name) ?? undefined,
             name,
             errorFields,
             undefined,
